@@ -46,5 +46,12 @@ public class AccountController {
         return new ResponseEntity<Account>(acc, HttpStatus.OK);
     }
 
+    @DeleteMapping("customers/{customerId}/accounts/{accountId}")
+    public ResponseEntity<Account> deleteAccount(@PathVariable("customerId") String customerId,
+                                                 @PathVariable("accountId") String accountId){
+        accountService.deleteAccount(customerId, accountId);
+        return new ResponseEntity<Account>(HttpStatus.OK);
+    }
+
 
 }

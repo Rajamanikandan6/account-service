@@ -1,14 +1,11 @@
 package com.maveric.accountservice.service;
 
 import com.maveric.accountservice.dto.Account;
-import com.maveric.accountservice.model.AccountModel;
 import com.maveric.accountservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import static com.maveric.accountservice.constants.Constants.*;
 
@@ -46,5 +43,12 @@ public class AccountServiceImp implements AccountService{
         Account acc=getAccountByAccId(customerId, accountId);
         acc.setType(newAccount.getType());
         return repository.save(acc);
+    }
+
+    @Override
+    public String deleteAccount(String customerId, String accountId) {
+        repository.delete(getAccountByAccId(customerId,accountId));
+        return "Account deleted successfully.";
+
     }
 }
