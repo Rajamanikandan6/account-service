@@ -32,4 +32,12 @@ public class AccountController {
         return new ResponseEntity<Account>(accounts,HttpStatus.OK);
     }
 
+    @GetMapping("customers/{customerId}/accounts/{accountId}")
+    public ResponseEntity<Account> getAccount(@PathVariable("customerId") String customerId,
+                                              @PathVariable("accountId") String accountId){
+        Account accounts=accountService.getAccountByAccId(customerId, accountId);
+        return new ResponseEntity<Account>(accounts, HttpStatus.OK);
+    }
+
+
 }

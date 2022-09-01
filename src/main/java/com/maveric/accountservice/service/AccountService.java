@@ -10,4 +10,5 @@ public interface AccountService {
    public List<Account> getAccountById(String customerId);
    public Account createAccount(Account transaction);
 
+   public Account getAccountByAccId(String customerId, String accountId);
 }
