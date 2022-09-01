@@ -7,5 +7,7 @@ import java.util.List;
 
 @Service
 public interface AccountService {
-   List<Account> getAccountById(String customerId);
+   public List<Account> getAccountById(String customerId);
+   public Account createAccount(Account transaction);
+
 }
