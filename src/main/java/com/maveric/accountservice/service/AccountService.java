@@ -9,6 +9,6 @@ import java.util.List;
 public interface AccountService {
    public List<Account> getAccountById(String customerId);
    public Account createAccount(Account transaction);
-
    public Account getAccountByAccId(String customerId, String accountId);
+   public Account updateAccount(String customerId, String accountId, Account account);
 }
