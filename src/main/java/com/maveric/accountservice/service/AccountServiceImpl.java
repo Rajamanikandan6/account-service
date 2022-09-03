@@ -53,4 +53,11 @@ public class AccountServiceImpl implements AccountService {
         acc.setType(newAccount.getType());
         return repository.save(acc);
     }
+
+    @Override
+    public String deleteAccount(String customerId, String accountId) {
+        repository.delete(getAccountByAccId(customerId,accountId));
+        return "Account deleted successfully.";
+
+    }
 }

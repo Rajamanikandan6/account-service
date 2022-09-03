@@ -11,5 +11,6 @@ public interface AccountService {
     public AccountDto createAccount(AccountDto account);
     public AccountDto getAccountByAccId(String customerId, String accountId);
     public AccountDto updateAccount(String customerId, String accountId, AccountDto account);
+    public String deleteAccount(String customerId, String accountId);
 
 }
