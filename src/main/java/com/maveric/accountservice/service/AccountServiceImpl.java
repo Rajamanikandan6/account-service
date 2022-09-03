@@ -47,4 +47,10 @@ public class AccountServiceImpl implements AccountService {
 //        }
         return account;
     }
+    @Override
+    public AccountDto updateAccount(String customerId, String accountId, AccountDto newAccount) {
+        AccountDto acc=getAccountByAccId(customerId, accountId);
+        acc.setType(newAccount.getType());
+        return repository.save(acc);
+    }
 }

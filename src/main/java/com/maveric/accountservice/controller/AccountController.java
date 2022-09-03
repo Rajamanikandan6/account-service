@@ -41,4 +41,11 @@ public class AccountController {
         AccountDto accounts=accountService.getAccountByAccId(customerId, accountId);
         return new ResponseEntity<AccountDto>(accounts, HttpStatus.OK);
     }
+
+    @PutMapping("customers/{customerId}/accounts/{accountId}")
+    public ResponseEntity<AccountDto> getAccount(@PathVariable("customerId") String customerId,
+                                              @PathVariable("accountId") String accountId,@RequestBody AccountDto account){
+        AccountDto acc = accountService.updateAccount(customerId, accountId,account);
+        return new ResponseEntity<AccountDto>(acc, HttpStatus.OK);
+    }
 }
