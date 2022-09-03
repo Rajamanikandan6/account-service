@@ -5,6 +5,8 @@ import com.maveric.accountservice.exception.AccountNotFoundException;
 import com.maveric.accountservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.List;
 
 import static com.maveric.accountservice.constants.Constants.getCurrentDateTime;
@@ -30,5 +32,19 @@ public class AccountServiceImpl implements AccountService {
         account.setCreatedAt(getCurrentDateTime());
         account.setUpdatedAt(getCurrentDateTime());
         return repository.save(account);
+    }
+
+    @Override
+    public AccountDto getAccountByAccId(String customerId, String accountId) {
+        AccountDto account = null;
+        Iterable<AccountDto> accnt=repository.findAllById(Arrays.asList(customerId,accountId));
+
+        for (AccountDto acc:accnt){
+            account=acc;
+        }
+//        if(account==null){
+//            throw new AccountNotFoundException(ACCOUNT_NOT_FOUND_MESSAGE);
+//        }
+        return account;
     }
 }

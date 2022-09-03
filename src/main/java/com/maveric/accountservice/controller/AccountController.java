@@ -34,4 +34,11 @@ public class AccountController {
 
         return new ResponseEntity<AccountDto>(accounts,HttpStatus.OK);
     }
+
+    @GetMapping("customers/{customerId}/accounts/{accountId}")
+    public ResponseEntity<AccountDto> getAccount(@PathVariable("customerId") String customerId,
+                                              @PathVariable("accountId") String accountId){
+        AccountDto accounts=accountService.getAccountByAccId(customerId, accountId);
+        return new ResponseEntity<AccountDto>(accounts, HttpStatus.OK);
+    }
 }
