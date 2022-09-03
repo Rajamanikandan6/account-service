@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,5 +21,17 @@ public class AccountController {
                                                             @RequestParam(defaultValue = "10") Integer pageSize){
         List<AccountDto> accountResponse=accountService.getAccountById(customerId);
         return new ResponseEntity<List<AccountDto>>(accountResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("customers/{customerId}/accounts")
+    public ResponseEntity<AccountDto> createAccount (@PathVariable("customerId") String customerId, @Valid
+    @RequestBody AccountDto account){
+//        if(customerId==null)
+//        {
+//            throw new CustomerNotFoundException();
+//        }
+        AccountDto accounts=accountService.createAccount(account);
+
+        return new ResponseEntity<AccountDto>(accounts,HttpStatus.OK);
     }
 }

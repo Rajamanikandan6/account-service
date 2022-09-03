@@ -1,22 +1,26 @@
-package com.maveric.accountservice.dto;
+package com.maveric.accountservice.model;
 
+import com.maveric.accountservice.constants.Type;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import com.maveric.accountservice.constants.Type;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 
 @NoArgsConstructor
-@AllArgsConstructor(access= AccessLevel.PUBLIC)
-//@Document(collection = "AccountDetails")
-public class AccountDto {
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@Document(collection = "AccountDetails")
+public class AccountModel {
+
     @Id
-    private String id;
+    private String _id;
     private Type type;
     private String customerId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     //private Balance balance;
+
 }

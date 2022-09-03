@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import static com.maveric.accountservice.constants.Constants.getCurrentDateTime;
+
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -21,5 +23,12 @@ public class AccountServiceImpl implements AccountService {
 //            throw new AccountNotFoundException(ACCOUNT_NOT_FOUND_MESSAGE);
 //        }
         return accountList;
+    }
+    @Override
+    public AccountDto createAccount(AccountDto account) {
+
+        account.setCreatedAt(getCurrentDateTime());
+        account.setUpdatedAt(getCurrentDateTime());
+        return repository.save(account);
     }
 }

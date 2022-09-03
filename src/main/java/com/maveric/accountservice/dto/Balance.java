@@ -1,10 +1,17 @@
 package com.maveric.accountservice.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Currency;
 
-@Data
+@Getter
+@Setter
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class Balance {
     private String _id;
     private String amount;
