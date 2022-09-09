@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 //import static org.springframework.http.RequestEntity.post;
 
+import java.util.List;
+
 import static com.maveric.accountservice.AccountServiceApplicationTests.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -34,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountControllerTest {
 
     @Mock
-    ResponseEntity<Balance> balance;
+    ResponseEntity<List<Balance>> balance;
 
     @Autowired
     private MockMvc mock;
@@ -68,9 +70,9 @@ public class AccountControllerTest {
     @Test
     public void shouldGetStatus200WhenRequestMadeToGetAccountDetails() throws Exception
     {
-        when(accountService.getAccountDetailsById(any(String.class))).thenReturn(getAccountDto());
-        when(balanceServiceConsumer.getBalance(any(String.class))).thenReturn(balance);
-        when(balance.getBody()).thenReturn(getBalance());
+//        when(accountService.getAccountDetailsById(any(String.class))).thenReturn(getAccountDto());
+//        when(balanceServiceConsumer.getBalance(any(String.class))).thenReturn(balance);
+//        when(balance.getBody()).thenReturn(getBalance());
 //        when(transactionServiceConsumer.getTransactionsByAccountId(any(String.class))).thenReturn(transactionDto);
 //        when(transactionDto.getBody()).thenReturn(Arrays.asList(getTransactionDto(),getTransactionDto()));
 

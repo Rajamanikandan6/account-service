@@ -35,6 +35,12 @@ public class AccountServiceImpl implements AccountService {
             return new ArrayList<>();
         }
     }
+
+    @Override
+    public List<AccountDto> getAccountsById(String customerId) {
+        List<AccountModel> account=repository.findByCustomerId(customerId);
+        return mapper.mapToDto(account);
+    }
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
         accountDto.setCreatedAt(getCurrentDateTime());
