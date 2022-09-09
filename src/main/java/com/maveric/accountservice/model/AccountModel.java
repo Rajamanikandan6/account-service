@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+
 @Document(collection = "AccountDetails")
 public class AccountModel {
 
@@ -21,6 +22,5 @@ public class AccountModel {
     private String customerId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    //private Balance balance;
 
 }

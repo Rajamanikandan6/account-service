@@ -1,6 +1,9 @@
 package com.maveric.accountservice.controller;
 
 import com.maveric.accountservice.dto.AccountDto;
+import com.maveric.accountservice.dto.Balance;
+import com.maveric.accountservice.exception.AccountNotFoundException;
+import com.maveric.accountservice.feignconsumer.BalanceServiceConsumer;
 import com.maveric.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,49 +13,54 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.maveric.accountservice.constants.Constants.BALANCE_NOT_FOUND_MESSAGE;
+
 @RestController
 @RequestMapping("/api/v1")
 public class AccountController {
     @Autowired
     AccountService accountService;
 
+    @Autowired
+    BalanceServiceConsumer balanceServiceConsumer;
+
     @GetMapping("customers/{customerId}/accounts")
-    public ResponseEntity<List<AccountDto>> getAccountsById(@PathVariable String customerId, @RequestParam(defaultValue = "0") Integer page,
+    public ResponseEntity<List<AccountDto>> getAccounts(@PathVariable String customerId, @RequestParam(defaultValue = "0") Integer page,
                                                             @RequestParam(defaultValue = "10") Integer pageSize){
-        List<AccountDto> accountResponse=accountService.getAccountById(customerId);
-        return new ResponseEntity<List<AccountDto>>(accountResponse, HttpStatus.OK);
+        List<AccountDto> accountDtoResponse = accountService.getAccounts(page, pageSize);
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
 
     @PostMapping("customers/{customerId}/accounts")
-    public ResponseEntity<AccountDto> createAccount (@PathVariable("customerId") String customerId, @Valid
-    @RequestBody AccountDto account){
-//        if(customerId==null)
-//        {
-//            throw new CustomerNotFoundException();
-//        }
-        AccountDto accounts=accountService.createAccount(account);
-
-        return new ResponseEntity<AccountDto>(accounts,HttpStatus.OK);
+    public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto) {
+        AccountDto accountDtoResponse = accountService.createAccount(accountDto);
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("customers/{customerId}/accounts/{accountId}")
-    public ResponseEntity<AccountDto> getAccount(@PathVariable("customerId") String customerId,
-                                              @PathVariable("accountId") String accountId){
-        AccountDto accounts=accountService.getAccountByAccId(customerId, accountId);
-        return new ResponseEntity<AccountDto>(accounts, HttpStatus.OK);
+    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId) {
+        AccountDto accountDtoResponse = accountService.getAccountDetailsById(accountId);
+
+        ResponseEntity<Balance> balanceDto = balanceServiceConsumer.getBalance(accountId);
+        try {
+            accountDtoResponse.setBalance(balanceDto.getBody());
+        }
+        catch(AccountNotFoundException ex)
+        {
+            throw new AccountNotFoundException(BALANCE_NOT_FOUND_MESSAGE+accountId);
+        }
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
 
     @PutMapping("customers/{customerId}/accounts/{accountId}")
-    public ResponseEntity<AccountDto> getAccount(@PathVariable("customerId") String customerId,
-                                              @PathVariable("accountId") String accountId,@RequestBody AccountDto account){
-        AccountDto acc = accountService.updateAccount(customerId, accountId,account);
-        return new ResponseEntity<AccountDto>(acc, HttpStatus.OK);
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable String customerId,@PathVariable String accountId,@RequestBody AccountDto accountDto) {
+        AccountDto accountDtoResponse = accountService.updateAccountDetails(accountId,accountDto);
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("customers/{customerId}/accounts/{accountId}")
-    public ResponseEntity<AccountDto> deleteAccount(@PathVariable("customerId") String customerId,
-                                                 @PathVariable("accountId") String accountId){
-        accountService.deleteAccount(customerId, accountId);
-        return new ResponseEntity<AccountDto>(HttpStatus.OK);
+    public ResponseEntity<String> deleteAccount(@PathVariable String customerId,@PathVariable String accountId) {
+        String result = accountService.deleteAccount(accountId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
