@@ -46,9 +46,8 @@ public class AccountController {
     }
 
     @GetMapping("customers/{customerId}/accounts/{accountId}")
-    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId) {
+    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId,@RequestHeader(value = "userId") String userId) {
         AccountDto accountDtoResponse = accountService.getAccountDetailsById(accountId);
-        String userId="2c9cf081831112660183118aeabf0000";
         ResponseEntity<List<Balance>> balanceDto = balanceServiceConsumer.getBalanceDetails(accountId,userId);
         try {
             accountDtoResponse.setBalance(balanceDto.getBody());
