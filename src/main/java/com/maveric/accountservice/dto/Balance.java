@@ -1,5 +1,6 @@
 package com.maveric.accountservice.dto;
 
+import com.maveric.accountservice.constants.Currency;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,10 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Balance {
-    private String _id;
-    private Number amount;
-    private String currency;
+    private String id;
+    private String amount;
+    private Currency currency;
     private String accountId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

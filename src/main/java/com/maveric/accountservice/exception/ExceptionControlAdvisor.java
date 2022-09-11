@@ -2,6 +2,7 @@ package com.maveric.accountservice.exception;
 
 import com.maveric.accountservice.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,14 @@ public class ExceptionControlAdvisor {
         return errorDto;
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public final ErrorDto handleMessageNotReadableException() {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST));
+        errorDto.setMessage("Type should be either 'CUREENT' or 'SAVINGS'");
+        return errorDto;
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -29,7 +38,7 @@ public class ExceptionControlAdvisor {
             MethodArgumentNotValidException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BAD_REQUEST_CODE);
-        errorDto.setMessage(BAD_REQUEST_MESSAGE);
+        errorDto.setMessage(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return errorDto;
     }
 

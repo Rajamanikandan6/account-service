@@ -30,7 +30,11 @@ public class AccountController {
         List<AccountDto> accountDtoResponse = accountService.getAccounts(page, pageSize);
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
-
+    @GetMapping("customers/{customerId}/customerAccounts")
+    public ResponseEntity<List<AccountDto>> getAccountsbyId(@PathVariable String customerId){
+        List<AccountDto> accountDtoResponse = accountService.getAccountsById(customerId);
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
+    }
     @PostMapping("customers/{customerId}/accounts")
     public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto) {
         AccountDto accountDtoResponse = accountService.createAccount(accountDto);
@@ -38,10 +42,9 @@ public class AccountController {
     }
 
     @GetMapping("customers/{customerId}/accounts/{accountId}")
-    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId) {
+    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId,@RequestHeader(value = "userId") String userId) {
         AccountDto accountDtoResponse = accountService.getAccountDetailsById(accountId);
-
-        ResponseEntity<Balance> balanceDto = balanceServiceConsumer.getBalance(accountId);
+        ResponseEntity<List<Balance>> balanceDto = balanceServiceConsumer.getBalanceDetails(accountId,userId);
         try {
             accountDtoResponse.setBalance(balanceDto.getBody());
         }

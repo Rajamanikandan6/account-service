@@ -1,5 +1,6 @@
 package com.maveric.accountservice.controller;
 
+import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.dto.Balance;
 import com.maveric.accountservice.feignconsumer.BalanceServiceConsumer;
 import com.maveric.accountservice.service.AccountService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 //import static org.springframework.http.RequestEntity.post;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.maveric.accountservice.AccountServiceApplicationTests.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountControllerTest {
 
     @Mock
-    ResponseEntity<Balance> balance;
+    ResponseEntity<List<Balance>> balance;
 
     @Autowired
     private MockMvc mock;
@@ -69,14 +74,31 @@ public class AccountControllerTest {
     public void shouldGetStatus200WhenRequestMadeToGetAccountDetails() throws Exception
     {
         when(accountService.getAccountDetailsById(any(String.class))).thenReturn(getAccountDto());
-        when(balanceServiceConsumer.getBalance(any(String.class))).thenReturn(balance);
-        when(balance.getBody()).thenReturn(getBalance());
+        when(balanceServiceConsumer.getBalanceDetails(any(),any())).thenReturn(getSampleBalance());
+//        when(balance.getBody()).thenReturn(getBalance());
 //        when(transactionServiceConsumer.getTransactionsByAccountId(any(String.class))).thenReturn(transactionDto);
 //        when(transactionDto.getBody()).thenReturn(Arrays.asList(getTransactionDto(),getTransactionDto()));
 
         mock.perform(get(apiV1+"/accountId1"))
                 .andExpect(status().isOk())
                 .andReturn();
+    }
+
+    public ResponseEntity<List<Balance>> getSampleBalance(){
+
+        List<Balance> balanceList = new ArrayList<>();
+        Balance balance = new Balance();
+        balance.setAmount("1");
+        balance.setCurrency(Currency.INR);
+        balance.setAccountId("1");
+        Balance balance1 = new Balance();
+        balance.setAmount("2");
+        balance.setCurrency(Currency.INR);
+        balance.setAccountId("2");
+
+        balanceList.add(balance1);
+        balanceList.add(balance);
+        return ResponseEntity.status(HttpStatus.OK).body(balanceList);
     }
 
     @Test

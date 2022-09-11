@@ -35,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
             return new ArrayList<>();
         }
     }
+
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
         accountDto.setCreatedAt(getCurrentDateTime());
@@ -70,5 +71,11 @@ public class AccountServiceImpl implements AccountService {
         }
         repository.deleteById(accountId);
         return ACCOUNT_DELETED_SUCCESS;
+    }
+
+    @Override
+    public List<AccountDto> getAccountsById(String customerId) {
+        List<AccountModel> account=repository.findByCustomerId(customerId);
+        return mapper.mapToDto(account);
     }
 }

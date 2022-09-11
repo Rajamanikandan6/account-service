@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.NotNull;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,8 +23,8 @@ import java.util.Optional;
 
 import static com.maveric.accountservice.AccountServiceApplicationTests.getAccount;
 import static com.maveric.accountservice.AccountServiceApplicationTests.getAccountDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static com.maveric.accountservice.constants.Constants.ACCOUNT_DELETED_SUCCESS;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.when;
@@ -47,24 +48,28 @@ public class AccountServiceTest {
 
     @Test
     public void testCreateAccount() throws Exception{
-        when(mapper.map(any(AccountDto.class))).thenReturn(getAccount());
+        //when(mapper.map(any(AccountDto.class))).thenReturn(getAccount());
         when(mapper.map(any(AccountModel.class))).thenReturn(getAccountDto());
         when(repository.save(any())).thenReturn(getAccount());
+        AccountDto accountDto= service.createAccount(getAccountDto());
+        assertSame(accountDto.getCustomerId(), getAccountDto().getCustomerId());
     }
 
     @Test
     public void testGetAccounts() {
         Page<AccountModel> pagedResponse = new PageImpl(Arrays.asList(getAccount(),getAccount()));
         when(repository.findAll(any(Pageable.class))).thenReturn(pagedResponse);
-        when(pageResult.hasContent()).thenReturn(true);
-        when(pageResult.getContent()).thenReturn(Arrays.asList(getAccount(),getAccount()));
         when(mapper.mapToDto(any())).thenReturn(Arrays.asList(getAccountDto(),getAccountDto()));
+        List<AccountDto> accountDtos= service.getAccounts(1,10);
+        assertTrue(accountDtos.size()==2);
     }
 
     @Test
     public void testGetAccountById() {
         when(repository.findById("123")).thenReturn(Optional.of(getAccount()));
         when(mapper.map(any(AccountModel.class))).thenReturn(getAccountDto());
+        AccountDto accountDto= service.getAccountDetailsById("123");
+        assertSame(accountDto.getCustomerId(), getAccountDto().getCustomerId());
     }
 
     @Test
@@ -82,5 +87,7 @@ public class AccountServiceTest {
     public void testDeleteAccountById() {
         when(repository.findById("123")).thenReturn(Optional.of(getAccount()));
         willDoNothing().given(repository).deleteById("123");
+       String returnStr = service.deleteAccount("123");
+        assertTrue(returnStr.equals(ACCOUNT_DELETED_SUCCESS));
     }
 }

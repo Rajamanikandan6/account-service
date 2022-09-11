@@ -1,6 +1,7 @@
 package com.maveric.accountservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.constants.Type;
 import com.maveric.accountservice.dto.AccountDto;
 import com.maveric.accountservice.dto.Balance;
@@ -54,8 +55,8 @@ public class AccountServiceApplicationTests {
 	{
 		return Balance.builder()
 				.accountId("1234")
-				.amount(1000)
-				.currency("INR")
+				.amount("1000")
+				.currency(Currency.INR)
 				.build();
 	}
 

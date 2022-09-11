@@ -5,9 +5,12 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import com.maveric.accountservice.constants.Type;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,12 +20,12 @@ import java.time.LocalDateTime;
 public class AccountDto {
     @Id
     private String _id;
-    @NotNull(message = "Type is mandatory - 'SAVINGS' or 'CURRENT'")
+    @Enumerated(EnumType.STRING)
     private Type type;
     @NotBlank(message = "Customer Id is mandatory")
     private String customerId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Balance balance;
+    private List<Balance> balance;
 }
