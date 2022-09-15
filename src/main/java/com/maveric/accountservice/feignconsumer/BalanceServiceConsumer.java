@@ -11,6 +11,6 @@ import java.util.List;
 
 @FeignClient(value = "feignUser",url = "http://localhost:3015/api/v1")
 public interface BalanceServiceConsumer {
-    @GetMapping("/accounts/{accountId}/accountBalance")
-    ResponseEntity<List<Balance>> getBalanceDetails(@PathVariable String accountId, @RequestHeader(value = "userId") String userId);
+    @GetMapping("/accounts/{accountId}/balances/accountBalance")
+    ResponseEntity<Balance> getBalanceAccountDetails(@PathVariable String accountId, @RequestHeader(value = "userId") String userId);
 }
