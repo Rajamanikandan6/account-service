@@ -45,13 +45,7 @@ public class AccountController {
     public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId,@RequestHeader(value = "userId") String userId) {
         AccountDto accountDtoResponse = accountService.getAccountDetailsById(accountId);
         ResponseEntity<Balance> balanceDto = balanceServiceConsumer.getBalanceAccountDetails(accountId,userId);
-        try {
-            accountDtoResponse.setBalance(balanceDto.getBody());
-        }
-        catch(AccountNotFoundException ex)
-        {
-            throw new AccountNotFoundException(BALANCE_NOT_FOUND_MESSAGE+accountId);
-        }
+        accountDtoResponse.setBalance(balanceDto.getBody());
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
 
