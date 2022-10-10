@@ -3,9 +3,7 @@ package com.maveric.accountservice.feignconsumer;
 import com.maveric.accountservice.dto.Balance;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,4 +11,7 @@ import java.util.List;
 public interface BalanceServiceConsumer {
     @GetMapping("/accounts/{accountId}/balances/accountBalance")
     ResponseEntity<Balance> getBalanceAccountDetails(@PathVariable String accountId, @RequestHeader(value = "userId") String userId);
+
+    @PostMapping("/accounts/{accountId}/balances")
+    ResponseEntity<Balance> createBalanceForAccount(@RequestBody Balance balance,@PathVariable String accountId, @RequestHeader(value = "userId") String userId);
 }

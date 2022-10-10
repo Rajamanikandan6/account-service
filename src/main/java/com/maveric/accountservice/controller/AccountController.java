@@ -1,5 +1,6 @@
 package com.maveric.accountservice.controller;
 
+import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.dto.AccountDto;
 import com.maveric.accountservice.dto.Balance;
 import com.maveric.accountservice.exception.AccountNotFoundException;
@@ -36,8 +37,13 @@ public class AccountController {
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
     @PostMapping("customers/{customerId}/accounts")
-    public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto) {
+    public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto,@RequestHeader(value = "userId") String userId) {
         AccountDto accountDtoResponse = accountService.createAccount(accountDto);
+        Balance balance=new Balance();
+        balance.setAmount("0");
+        balance.setCurrency(Currency.INR);
+        balance.setAccountId(accountDtoResponse.get_id());
+        balanceServiceConsumer.createBalanceForAccount(balance,accountDtoResponse.get_id(),userId);
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.CREATED);
     }
 
