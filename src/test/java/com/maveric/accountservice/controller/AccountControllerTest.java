@@ -74,31 +74,23 @@ public class AccountControllerTest {
     public void shouldGetStatus200WhenRequestMadeToGetAccountDetails() throws Exception
     {
         when(accountService.getAccountDetailsById(any(String.class))).thenReturn(getAccountDto());
-        when(balanceServiceConsumer.getBalanceDetails(any(),any())).thenReturn(getSampleBalance());
+        when(balanceServiceConsumer.getBalanceAccountDetails(any(),any())).thenReturn(getSampleBalance());
 //        when(balance.getBody()).thenReturn(getBalance());
 //        when(transactionServiceConsumer.getTransactionsByAccountId(any(String.class))).thenReturn(transactionDto);
 //        when(transactionDto.getBody()).thenReturn(Arrays.asList(getTransactionDto(),getTransactionDto()));
 
-        mock.perform(get(apiV1+"/accountId1"))
+        mock.perform(get(apiV1+"/accountId1").header("userId","434325325"))
                 .andExpect(status().isOk())
                 .andReturn();
     }
 
-    public ResponseEntity<List<Balance>> getSampleBalance(){
+    public ResponseEntity<Balance> getSampleBalance(){
 
-        List<Balance> balanceList = new ArrayList<>();
         Balance balance = new Balance();
-        balance.setAmount("1");
         balance.setCurrency(Currency.INR);
-        balance.setAccountId("1");
-        Balance balance1 = new Balance();
-        balance.setAmount("2");
-        balance.setCurrency(Currency.INR);
-        balance.setAccountId("2");
-
-        balanceList.add(balance1);
-        balanceList.add(balance);
-        return ResponseEntity.status(HttpStatus.OK).body(balanceList);
+        balance.setAccountId("4");
+        balance.setAmount("200");
+        return ResponseEntity.status(HttpStatus.OK).body(balance);
     }
 
     @Test

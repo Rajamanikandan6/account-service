@@ -27,5 +27,5 @@ public class AccountDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<Balance> balance;
+    private Balance balance;
 }
