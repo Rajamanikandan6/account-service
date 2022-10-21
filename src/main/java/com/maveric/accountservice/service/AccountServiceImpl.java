@@ -1,5 +1,6 @@
 package com.maveric.accountservice.service;
 
+import com.maveric.accountservice.constants.Type;
 import com.maveric.accountservice.dto.AccountDto;
 import com.maveric.accountservice.exception.AccountNotFoundException;
 import com.maveric.accountservice.mapper.AccountMapper;

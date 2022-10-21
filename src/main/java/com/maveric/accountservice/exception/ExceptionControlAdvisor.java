@@ -22,6 +22,14 @@ public class ExceptionControlAdvisor {
         errorDto.setMessage(exception.getMessage());
         return errorDto;
     }
+    //Customer Id missmatch
+    @ExceptionHandler(CustomerIdMissmatch.class)
+    public final ErrorDto handleCustomerIdMismatchException(CustomerIdMissmatch customerIdMissmatch) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST));
+        errorDto.setMessage(customerIdMissmatch.getMessage());
+        return errorDto;
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public final ErrorDto handleMessageNotReadableException() {

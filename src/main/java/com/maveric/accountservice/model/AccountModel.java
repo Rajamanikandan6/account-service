@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 
-@Document(collection = "AccountDetails")
+@Document(collection = "account")
 public class AccountModel {
 
     @Id

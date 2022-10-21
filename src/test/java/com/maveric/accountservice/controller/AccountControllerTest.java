@@ -3,6 +3,7 @@ package com.maveric.accountservice.controller;
 import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.dto.Balance;
 import com.maveric.accountservice.feignconsumer.BalanceServiceConsumer;
+import com.maveric.accountservice.feignconsumer.TransactionServiceConsumer;
 import com.maveric.accountservice.service.AccountService;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
@@ -49,6 +50,8 @@ public class AccountControllerTest {
 
     @MockBean
     BalanceServiceConsumer balanceServiceConsumer;
+    @MockBean
+    TransactionServiceConsumer transactionServiceConsumer;
 
     @Test
     public void shouldGetStatus200WhenRequestMadeTogetAccounts() throws Exception
@@ -115,7 +118,7 @@ public class AccountControllerTest {
     @Test
     public void shouldGetStatus200WhenRequestMadeToDeleteAccount() throws Exception
     {
-        mock.perform(delete(apiV1+"/accountId1")
+        mock.perform(delete(apiV1+"/accountId1").header("userId","65")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
