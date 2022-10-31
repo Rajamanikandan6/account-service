@@ -4,7 +4,9 @@ import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.dto.AccountDto;
 import com.maveric.accountservice.dto.Balance;
 import com.maveric.accountservice.exception.AccountNotFoundException;
+import com.maveric.accountservice.exception.CustomerIdMissmatch;
 import com.maveric.accountservice.feignconsumer.BalanceServiceConsumer;
+import com.maveric.accountservice.feignconsumer.TransactionServiceConsumer;
 import com.maveric.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.maveric.accountservice.constants.Constants.BALANCE_NOT_FOUND_MESSAGE;
+import static com.maveric.accountservice.constants.Constants.CUSTOMER_ID_ERROR;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -24,6 +27,9 @@ public class AccountController {
 
     @Autowired
     BalanceServiceConsumer balanceServiceConsumer;
+
+    @Autowired
+    TransactionServiceConsumer transactionServiceConsumer;
 
     @GetMapping("customers/{customerId}/accounts")
     public ResponseEntity<List<AccountDto>> getAccounts(@PathVariable String customerId, @RequestParam(defaultValue = "0") Integer page,
@@ -45,6 +51,7 @@ public class AccountController {
         balance.setAccountId(accountDtoResponse.get_id());
         balanceServiceConsumer.createBalanceForAccount(balance,accountDtoResponse.get_id(),userId);
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.CREATED);
+
     }
 
     @GetMapping("customers/{customerId}/accounts/{accountId}")
@@ -63,7 +70,17 @@ public class AccountController {
 
     @DeleteMapping("customers/{customerId}/accounts/{accountId}")
     public ResponseEntity<String> deleteAccount(@PathVariable String customerId,@PathVariable String accountId) {
+        transactionServiceConsumer.deleteAllTransaction(accountId);
         String result = accountService.deleteAccount(accountId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        //delete balance and transaction details
+        if(result!=null) {
+            balanceServiceConsumer.deleteBalanceByAccountId(accountId);
+            transactionServiceConsumer.deleteAllTransaction(accountId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else {
+            throw new AccountNotFoundException(accountId);
+        }
     }
+
 }
