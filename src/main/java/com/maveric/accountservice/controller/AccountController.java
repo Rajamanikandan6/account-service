@@ -1,5 +1,6 @@
 package com.maveric.accountservice.controller;
 
+import com.maveric.accountservice.constants.Currency;
 import com.maveric.accountservice.dto.AccountDto;
 import com.maveric.accountservice.dto.Balance;
 import com.maveric.accountservice.exception.AccountNotFoundException;
@@ -42,28 +43,22 @@ public class AccountController {
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
     @PostMapping("customers/{customerId}/accounts")
-    public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto) {
-        if(accountDto.getCustomerId().equals(customerId)){
-            AccountDto accountDtoResponse = accountService.createAccount(accountDto);
-            return new ResponseEntity<>(accountDtoResponse, HttpStatus.CREATED);
-            //Check for customerid in request body and in URL
-        }else{
-            throw new CustomerIdMissmatch(CUSTOMER_ID_ERROR);
-        }
+    public ResponseEntity<AccountDto> createAccount(@PathVariable String customerId, @Valid @RequestBody AccountDto accountDto,@RequestHeader(value = "userId") String userId) {
+        AccountDto accountDtoResponse = accountService.createAccount(accountDto);
+        Balance balance=new Balance();
+        balance.setAmount("0");
+        balance.setCurrency(Currency.INR);
+        balance.setAccountId(accountDtoResponse.get_id());
+        balanceServiceConsumer.createBalanceForAccount(balance,accountDtoResponse.get_id(),userId);
+        return new ResponseEntity<>(accountDtoResponse, HttpStatus.CREATED);
 
     }
 
     @GetMapping("customers/{customerId}/accounts/{accountId}")
     public ResponseEntity<AccountDto> getAccountDetails(@PathVariable String customerId,@PathVariable String accountId,@RequestHeader(value = "userId") String userId) {
         AccountDto accountDtoResponse = accountService.getAccountDetailsById(accountId);
-        ResponseEntity<List<Balance>> balanceDto = balanceServiceConsumer.getBalanceDetails(accountId,userId);
-        try {
-            accountDtoResponse.setBalance(balanceDto.getBody());
-        }
-        catch(AccountNotFoundException ex)
-        {
-            throw new AccountNotFoundException(BALANCE_NOT_FOUND_MESSAGE+accountId);
-        }
+        ResponseEntity<Balance> balanceDto = balanceServiceConsumer.getBalanceAccountDetails(accountId,userId);
+        accountDtoResponse.setBalance(balanceDto.getBody());
         return new ResponseEntity<>(accountDtoResponse, HttpStatus.OK);
     }
 
