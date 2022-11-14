@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class AccountServiceApplicationTests {
 
-	public static final String apiV1 = "/api/v1/customers/1/accounts";
+	public static final String apiV1 = "/api/v1/customers/1234/accounts";
+	public static final String invalidApiV1 = "/api/v1/customers/0000/accounts/0000";
 	@Test
 	void testDoSomething() {  // Noncompliant
 		assertTrue(true);
