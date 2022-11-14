@@ -1,6 +1,7 @@
 package com.maveric.accountservice.exception;
 
 import com.maveric.accountservice.dto.ErrorDto;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -27,7 +28,7 @@ public class ExceptionControlAdvisor {
     @ExceptionHandler(CustomerIdMissmatch.class)
     public final ErrorDto handleCustomerIdMismatchException(CustomerIdMissmatch customerIdMissmatch) {
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST));
+        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
         errorDto.setMessage(customerIdMissmatch.getMessage());
         return errorDto;
     }
@@ -35,9 +36,9 @@ public class ExceptionControlAdvisor {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public final ResponseEntity<ErrorDto> handleMessageNotReadableException() {
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST));
-        errorDto.setMessage("Type should be either 'CUREENT' or 'SAVINGS'");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
+        errorDto.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+        errorDto.setMessage("Type should be either 'CURRENT' or 'SAVINGS'");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(errorDto);
     }
 
 
@@ -58,6 +59,24 @@ public class ExceptionControlAdvisor {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(METHOD_NOT_ALLOWED_CODE);
         errorDto.setMessage(METHOD_NOT_ALLOWED_MESSAGE);
+        return errorDto;
+    }
+
+    @ExceptionHandler(BalanceFeignException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final ErrorDto handleBalanceFeignException(BalanceFeignException balanceFeignException) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(ACCOUNT_NOT_FOUND_CODE);
+        errorDto.setMessage(balanceFeignException.getMessage());
+        return errorDto;
+    }
+
+    @ExceptionHandler(FeignException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final ErrorDto feignExceptionError(FeignException exception) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(ACCOUNT_NOT_FOUND_CODE);
+        errorDto.setMessage(exception.getMessage());
         return errorDto;
     }
 }
