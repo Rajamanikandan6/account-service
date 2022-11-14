@@ -7,9 +7,9 @@ import java.util.List;
 
 @Service
 public interface AccountService {
-    public List<AccountDto> getAccounts(Integer page, Integer pageSize);
+    public List<AccountDto> getAccounts(String customerId, Integer page, Integer pageSize);
     public AccountDto createAccount(AccountDto account);
-    public AccountDto getAccountDetailsById(String accountId);
+    public AccountDto getAccountDetailsById(String customerId, String accountId);
     public AccountDto updateAccountDetails(String accountId,AccountDto accountDto);
     public String deleteAccount(String accountId);
 
